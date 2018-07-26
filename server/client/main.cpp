@@ -15,7 +15,7 @@ int retVal; //返回值
 volatile int connetFlag;//判断连接状态
 
 //隐藏DOS黑窗口
-//#pragma comment(linker,"/subsystem:\"windows\"  /entry:\"mainCRTStartup\"" )
+#pragma comment(linker,"/subsystem:\"windows\"  /entry:\"mainCRTStartup\"" )
 //定义路径最大程度
 #define MAX_PATH_NUM 4096
 //定义守护进程名称
@@ -39,7 +39,7 @@ BOOL SetSelfStart()
 	{
 		return FALSE;
 	}
-
+	//testSocket表示本程序名称
 	lRet = RegSetValueExA(hKey, "testSocket", 0, REG_SZ, (const unsigned char*)pName, strlen(pName) + sizeof(char));
 
 	//判断是否成功
@@ -52,8 +52,6 @@ BOOL SetSelfStart()
 	RegCloseKey(hKey);
 	return TRUE;
 }
-
-
 
 void receive_info_thread()
 {
@@ -99,11 +97,11 @@ void send_info_thread()
 int main(int argc, char* argv[])
 {
 	//设置程序开机自启动
-	//if (!SetSelfStart())
-	//{
-	//	cout << "守护进程开机自启动失败" << endl;
-	//	return -1;
-	//}
+	if (!SetSelfStart())
+	{
+		cout << "守护进程开机自启动失败" << endl;
+		return -1;
+	}
 lable1:
 	//初始化套结字动态库  
 	if (WSAStartup(MAKEWORD(2, 2), &wsd) != 0)
